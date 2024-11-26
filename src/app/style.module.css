@@ -1,0 +1,11 @@
+.bigCircle{
+    width: 550px;
+    height: 550px;
+    left: 62%;
+    top: 50px;
+}
+
+.smallCircle{
+    width: 25px;
+    height: 25px;
+}
