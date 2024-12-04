@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Button from "@/app/Components/Button";
+import Button from "./Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faDeleteLeft,
@@ -24,7 +24,7 @@ import {
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import Resulte from "./resulte";
 
-import Calculator from "@/app/Components/calculateAction";
+import Calculator from "./calculateAction";
 const calculator = Calculator.getInstance();
 
 const Panel = () => {
