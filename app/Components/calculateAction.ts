@@ -87,9 +87,6 @@ class Calculator implements CalculatorInterface {
     for (const token of postfix) {
       if (!isNaN(Number(token))) {
         stack.push(Number(token)); // Push numbers to stack
-      } else if (token === "%") {
-        const num = stack.pop()!;
-        stack.push(num / 100);
       } else {
         const b = stack.pop()!;
         const a = stack.pop()!;

@@ -1,5 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { add } from "../state/reducer";
+import { AppDispatch } from "../state/store";
 import Button from "./Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -21,15 +24,33 @@ import {
   fa5,
   fa6,
 } from "@fortawesome/free-solid-svg-icons";
-import "@fortawesome/fontawesome-svg-core/styles.css";
 import Resulte from "./resulte";
 
 import Calculator from "./calculateAction";
 const calculator = Calculator.getInstance();
 
-const Panel = () => {
+const Panel = ({ selectedHistory }: { selectedHistory: string }) => {
   const [result, setResult] = useState<string>(calculator.result);
+  const [res, setRes] = useState("");
   const [isReady, setIsReady] = useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    const [expression, result] = selectedHistory.split("=");
+    if (expression.length) {
+      setResult(expression.trim() + "=");
+      calculator.result = expression.trim() + "=";
+      setRes(String(calculator.calculate()));
+    }
+  }, [selectedHistory]);
+
+  useEffect(() => {
+    if (isReady) {
+      setRes(String(calculator.calculate()));
+    } else {
+      setRes("");
+    }
+  }, [isReady]);
 
   useEffect(() => {
     const ontype = (e: any) => {
@@ -42,9 +63,6 @@ const Panel = () => {
         if (text === "." && !resultLength) {
           setResult((prevValue) => prevValue + "0");
         }
-        if (text === "=") {
-          setIsReady(true);
-        }
       }
     };
 
@@ -55,18 +73,36 @@ const Panel = () => {
     };
   }, [result]);
 
+  const addToHistory = (ex: string) => {
+    dispatch(add(ex));
+  };
+
+  const handelExpressions = (exp: string) => {
+    const text = exp.match(
+      /^(?!.*[+\-*/]{2,})(?!.*[+\-*/]=)(?!.*\.\.)(?!.*%%)([0-9]+(\.[0-9]*)?|\.[0-9]+|[+\-*/%()]|%)*=?$/
+    )?.[0];
+
+    if (text) {
+      const expression = text.replace(/(\d+)%/g, (match, num) => {
+        const percent = num / 100;
+        return String(percent);
+      });
+      setResult(expression);
+      calculator.result = expression;
+      if (exp[exp.length - 1] === "=") {
+        setIsReady(true);
+        addToHistory(`${result} = ${calculator.calculate()}`);
+      }
+    }
+  };
+
   const onchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.value.length) {
       setResult("");
       calculator.result = "";
     }
-    const text = e.target.value.match(
-      /^(?!.*[+\-*/%]{2,})(?!.*\.\.)([0-9]+(\.[0-9]*)?|\.[0-9]+|[+\-*/%]|[\(\)])+=?$/
-    )?.[0];
-    if (text) {
-      setResult(text);
-      calculator.result = text;
-    }
+
+    handelExpressions(e.target.value);
   };
 
   const onAC = () => {
@@ -91,26 +127,14 @@ const Panel = () => {
       calculator.result = "0.";
     }
 
-    if (char === "=") {
-      setIsReady(true);
-    }
-
-    const text = newResult.match(
-      /^(?!.*[+\-*/%]{2,})(?!.*\.\.)([0-9]+(\.[0-9]*)?|\.[0-9]+|[+\-*/%]|[\(\)])+=?$/
-    )?.[0];
-    if (text) {
-      calculator.result = text;
-      setResult(text);
-    }
+    handelExpressions(newResult);
   };
 
   return (
     <>
       <div className='w-full h-1/3 flex flex-col'>
         <Resulte value={result} onchange={onchange} />
-        <div className='h-14 text-4xl text-gray-800 pb-4'>
-          {isReady && calculator.calculate()}
-        </div>
+        <div className='h-14 text-4xl text-gray-800 pb-4'>{isReady && res}</div>
       </div>
       <div className='grid grid-cols-4 gap-5 pt-8 pb-4'>
         {/* firs row */}

@@ -1,5 +1,7 @@
 "use client";
 import React, { useRef } from "react";
+import { useAppSelector } from "../state/hooks";
+import { RootState } from "../state/store";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Panel from "./panel";
@@ -50,13 +52,15 @@ const CalculatorSkin = ({
     }
   });
 
+  const history = useAppSelector((state: RootState) => state.calculator.input);
+
   return (
     <div
       ref={el}
       className={`${width} ${height} ${top} ${left} backdrop-blur-lg bg-gray-400/20 absolute rounded-lg shadow-2xl`}>
       {divide && (
         <div className='flex flex-col h-full divide-y-2 px-4'>
-          <Panel />
+          <Panel selectedHistory={history} />
         </div>
       )}
       <div className='h-full w-full flex justify-center items-center text-gray-100 text-xl'>

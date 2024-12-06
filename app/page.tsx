@@ -2,11 +2,15 @@ import React from "react";
 import SmallCircle from "./Components/smallCircles";
 import BigCircle from "./Components/bigCircle";
 import CalculatorSkin from "./Components/calculatorSkin";
+import History from "./Components/history";
+import Nav from "./Components/navbar";
 
 const Home = () => {
   return (
     <div>
-      <div id='svg-filter' className='w-screen h-screen'>
+      <Nav />
+      <History />
+      <div id='svg-filter' className='w-screen h-screen -z-10'>
         <SmallCircle className='right-48 bottom-14 w-6 h-6' />
         <SmallCircle className='left-16 top-0 w-5 h-5' />
         <SmallCircle className='right-3 top-30 w-7 h-7' />
@@ -37,23 +41,23 @@ const Home = () => {
         left='left-[55%]'
         top='top-[6rem]'
       />
-      
+
       <CalculatorSkin
         divide={false}
         width='w-8'
         height='h-8'
         left='left-1/3'
         top='top-20'>
-          3
+        3
       </CalculatorSkin>
 
       <CalculatorSkin
         divide={false}
         width='w-8'
         height='h-8'
-        left='left-96'
+        left='left-1/2'
         top='top-1/2'>
-          7
+        7
       </CalculatorSkin>
 
       <CalculatorSkin
@@ -62,7 +66,7 @@ const Home = () => {
         height='h-8'
         left='right-80'
         top='bottom-4'>
-          6
+        6
       </CalculatorSkin>
       <CalculatorSkin
         divide={false}
@@ -70,7 +74,7 @@ const Home = () => {
         height='h-8'
         left='left-24'
         top='bottom-20'>
-          8
+        8
       </CalculatorSkin>
     </div>
   );
